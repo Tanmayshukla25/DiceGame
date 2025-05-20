@@ -8,9 +8,8 @@ import dice6 from "./images/dice_6.png";
 import "./App.css";
 
 function App() {
-
   const [score, setScore] = useState(0);
-  const [count, setCount] = useState([1, 2, 3, 4, 5, 6]);
+  const [count] = useState([1, 2, 3, 4, 5, 6]);
   const [selectedNumber, setSelectedNumber] = useState(null);
   const [randomImage, setRandomImage] = useState(dice1);
   const [currentDiceValue, setCurrentDiceValue] = useState(null);
@@ -18,16 +17,21 @@ function App() {
   const diceImages = [dice1, dice2, dice3, dice4, dice5, dice6];
 
   const handleImg = () => {
+    if (selectedNumber === null) {
+      alert("Please select a number before rolling the dice.");
+      return;
+    }
+
     const index = Math.floor(Math.random() * diceImages.length);
     const newDiceValue = index + 1;
 
     setRandomImage(diceImages[index]);
     setCurrentDiceValue(newDiceValue);
 
-    if (selectedNumber === currentDiceValue) {
-      setScore(score + 15);
+    if (selectedNumber === newDiceValue) {
+      setScore((prev) => prev + 15);
     } else {
-      setScore(score - 5);
+      setScore((prev) => prev - 5);
     }
   };
 
@@ -36,11 +40,14 @@ function App() {
       <h1 className="text-4xl font-bold mb-4">Score: {score}</h1>
 
       <div className="my-4">
+        <p className="text-lg font-semibold mb-2">Select a number:</p>
         {count.map((item) => (
           <button
             key={item}
             onClick={() => setSelectedNumber(item)}
-           className="text-white bg-black m-1 px-2 text-2xl rounded"
+            className={`text-white m-1 px-3 py-1 text-2xl rounded ${
+              selectedNumber === item ? "bg-green-600" : "bg-black"
+            }`}
           >
             {item}
           </button>
